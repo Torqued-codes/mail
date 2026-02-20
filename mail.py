@@ -5,8 +5,8 @@ def analyze_email(sender, subject, body):
     reasons = []
 
     suspicious_domains = [
-        'paypa1.com', 'amaz0n.com', 'g00gle.com', 'micros0ft.com',
-        'apple-support.com', 'secure-login.com', 'account-verify.com'
+        'paypa1.com', 'amaz0n.com', 'g00gle.com', 'micros0ft.com','rnicrosoft.com',
+        'apple-support.com', 'secure-login.com', 'nvclia.com','openaii.com','account-verify.com'
     ]
     if any(domain in sender.lower() for domain in suspicious_domains):
         score += 40
@@ -20,7 +20,7 @@ def analyze_email(sender, subject, body):
             reasons.append("⚠️  Official service using a free email provider")
 
     urgent_words = [
-        'urgent', 'act now', 'immediately', 'suspended', 'verify now',
+        'urgent', 'act now', 'immediately', 'suspended', 'verify now',''
         'account locked', 'limited time', 'final warning', 'click here',
         'confirm your identity', 'unusual activity'
     ]
@@ -38,15 +38,13 @@ def analyze_email(sender, subject, body):
         score += 20
         reasons.append("⚠️  URL shortener detected in email body")
 
-    # HTTP (not HTTPS) links
     if 'http://' in body.lower():
         score += 10
         reasons.append("⚠️  Non-secure HTTP link found")
 
-    # ─── 5. Requests for Sensitive Info ─────────────────────────
     sensitive_keywords = [
-        'password', 'credit card', 'social security', 'ssn',
-        'bank account', 'otp', 'pin', 'date of birth'
+        'password', 'credit card', 'social security', 'ssn','account number','cvv','security code','login credentials','personal information','sensitive data','financial information','account details','social security number','credit card number','expiration date','security code','login info','account credentials','personal info','sensitive info','confidential data','private information','bank details',
+        'bank account', 'otp', 'pin', 'date of birth','mother\'s maiden name', 'passport number', 'driver\'s license','security question','two-factor authentication','2fa code','verification code','access code','secret question','recovery email','backup codes', 'security answer', 'account recovery', 'identity verification','personal details','confidential information','private key','secret key','api key','encryption key','decryption key','security token','auth token','session token',
     ]
     found_sensitive = [k for k in sensitive_keywords if k in body.lower()]
     if found_sensitive:
@@ -61,8 +59,10 @@ def analyze_email(sender, subject, body):
             reasons.append("⚠️  Sender display name doesn't match email domain")
 
     grammar_red_flags = [
-        'dear customer', 'dear user', 'valued member',
-        'kindly revert', 'do the needful'
+        'dear customer', 'dear user', 'valued member','dear sir/madam', 'greetings', 'hello friend','attention',
+        'kindly revert', 'do the needful','apply now', 'click the link below', 'asap', 'immediately', 'urgent action required','verify your account', 'update your information','suspicious activity detected', 'account suspended', 'final notice', 'limited time offer', 'act now', 'last chance', 'exclusive deal', 'congratulations you won', 'free gift', 'risk-free', 'no obligation',
+        'this is not a scam', '100% legit', 'guaranteed', 'once in a lifetime', 'you have been selected', 'winner', 'claim your prize', 'click here to claim', 'verify your identity', 'confirm your account', 'reset your password','unusual activity detected','account locked','security alert','important notice','update your account','verify your email','suspicious login attempt',
+        'account verification required', 'urgent', 'immediately', 'act now', 'limited time', 'final warning', 'click here', 'confirm your identity', 'unusual activity', 'account locked', 'suspended', 'verify now', 'account suspended', 'final notice', 'limited time offer', 'act now', 'last chance', 'exclusive deal', 'congratulations you won', 'free gift', 'risk-free', 'no obligation','account verification required',
     ]
     if any(g in body.lower() for g in grammar_red_flags):
         score += 10
