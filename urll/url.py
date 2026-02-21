@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import time  
 a = Flask(__name__, static_folder='static')
-CORS(a)
+CORS(a, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 class url:
     def __init__(self):  
