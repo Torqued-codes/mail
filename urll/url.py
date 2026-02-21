@@ -17,58 +17,9 @@ class url:
             {
                 'name': 'Cross-Site Scripting (XSS)',
                 'description': 'A vulnerability that allows attackers to inject malicious scripts.',
-                'severity': 'Medium',
-                'icon': 'script',
-                'patterns': ['<script>', 'javascript:', 'onerror=', 'onload=']
-            },
-            {
-                'name': 'Remote Code Execution (RCE)',
-                'description': 'A vulnerability that allows an attacker to execute arbitrary code.',
-                'severity': 'Critical',
+                'severity': 'High',
                 'icon': 'code',
-                'patterns': [';', '&&', '|', '`']
-            },
-            {
-                'name': 'Directory Traversal',
-                'description': 'A vulnerability that allows attackers to access files outside the web root.',
-                'severity': 'High',
-                'icon': 'folder',
-                'patterns': ['../', '..\\', '%2e%2e%2f', '%2e%2e\\']
-            },
-            {
-                'name': 'Insecure Direct Object References (IDOR)',
-                'description': 'A vulnerability that exposes internal implementation objects.',
-                'severity': 'High',
-                'icon': 'key',
-                'patterns': ['/file?id=', '/user?id=', '/document?id=']
-            },
-            {
-                'name': 'Cross-Site Request Forgery (CSRF)',
-                'description': 'A vulnerability that tricks a user into submitting a malicious request.',
-                'severity': 'Medium',
-                'icon': 'shield',
-                'patterns': ['<form', '<input type="hidden"', '<button type="submit"']
-            },
-            {
-                'name': 'Open Redirect',
-                'description': 'A vulnerability that allows attackers to redirect users to malicious sites.',
-                'severity': 'Medium',
-                'icon': 'redirect',
-                'patterns': ['?redirect=', '?url=', '?next=']
-            },
-            {
-                'name': 'File Inclusion',
-                'description': 'A vulnerability that allows an attacker to include a file via a script.',
-                'severity': 'High',
-                'icon': 'file',
-                'patterns': ['?include=', '?file=', '?page=']
-            },
-            {
-                'name': 'Command Injection',
-                'description': 'Checks for command injection patterns in user input.',
-                'severity': 'Critical',
-                'icon': 'terminal',
-                'patterns': [';', '&&', '|', '`']
+                'patterns': ['<script>', 'javascript:', 'onerror=', 'onload=']
             },
             {
                 'name': 'HTTPS/SSL Check',  
@@ -79,13 +30,27 @@ class url:
                 'custom_check': "lambda url: not url.startswith('https://')"  
             },
             {
-                'name': 'URL Shortener Detection',
-                'description': 'Detects if the URL is using a known URL shortening service.',
+                'name': 'Directory Traversal',
+                'description': 'A vulnerability that allows attackers to access files outside the web root.',
+                'severity': 'High',
+                'icon': 'folder',
+                'patterns': ['../', '..\\', '%2e%2e%2f', '%2e%2e\\']
+            },
+            {
+                'name': 'Command Injection',
+                'description': 'Checks for command injection patterns in user input.',
+                'severity': 'Critical',
+                'icon': 'terminal',
+                'patterns': [';', '&&', '|', '`','$(', '${']
+            },
+            {
+                'name': 'Open Redirect',
+                'description': 'A vulnerability that allows attackers to redirect users to malicious sites.',
                 'severity': 'Medium',
-                'icon': 'link',
-                'patterns': ['bit.ly', 'tinyurl.com', 'goo.gl', 'ow.ly', 't.co',
-                             'is.gd', 'buff.ly', 'adf.ly', 'bit.do', 'cutt.ly']
-            }
+                'icon': 'redirect',
+                'patterns': ['?redirect=', '?url=', '?next=','return=']
+            },
+            
         ]
 
     def test_vulnerabilities(self, url, test):
@@ -105,7 +70,7 @@ class url:
     def scan_url(self, url):
         results = []
         for test in self.vulnerability_score:
-            time.sleep(0.5)  
+            time.sleep(0.3)  
             vulnerable = self.test_vulnerabilities(url, test)
             results.append({
                 'name': test['name'],
@@ -151,3 +116,4 @@ def index():
 
 if __name__ == '__main__':
     a.run(debug=True, port=5000)
+    

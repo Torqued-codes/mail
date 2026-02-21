@@ -117,12 +117,28 @@
 
         .loading { color: #aaa; font-size: 1rem; margin-top: 20px; display: none; }
         .hidden { display: none; }
+
+        .wake-notice {
+            background: #1a1a2e;
+            border: 1px solid #ffcc00;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: #ffcc00;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            max-width: 700px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
     <h1>🔍 URL Vulnerability Scanner</h1>
     <p class="subtitle">Enter a URL to scan for common vulnerabilities</p>
+
+    <div class="wake-notice">
+        ⚠️ First scan may take up to 50 seconds to wake up the server. Please be patient!
+    </div>
 
     <div class="input-section">
         <input type="text" id="urlInput" placeholder="https://example.com?id=1" />
@@ -149,6 +165,8 @@
     <div class="results" id="results"></div>
 
     <script>
+        const SERVER_URL = 'https://mail-1-enru.onrender.com';
+
         async function scanURL() {
             const url = document.getElementById('urlInput').value.trim();
             if (!url) {
@@ -156,14 +174,14 @@
                 return;
             }
 
-            // Show loading
             document.getElementById('loading').style.display = 'block';
+            document.getElementById('loading').textContent = '⏳ Scanning... (first scan may take up to 50 seconds)';
             document.getElementById('results').innerHTML = '';
             document.getElementById('stats').classList.add('hidden');
             document.getElementById('scanBtn').disabled = true;
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/scan', {
+                const response = await fetch(`${SERVER_URL}/scan`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: url })
@@ -172,13 +190,11 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Update stats
                     document.getElementById('totalCount').textContent = data.stats.total_tests;
                     document.getElementById('vulnCount').textContent  = data.stats.vulnerable;
                     document.getElementById('safeCount').textContent  = data.stats.safe_count;
                     document.getElementById('stats').classList.remove('hidden');
 
-                    // Show results
                     const container = document.getElementById('results');
                     data.results.forEach(result => {
                         const card = document.createElement('div');
@@ -199,7 +215,7 @@
                     });
                 }
             } catch (error) {
-                alert('Error connecting to server. Make sure url.py is running!');
+                alert('Error connecting to server. Please try again!');
             }
 
             document.getElementById('loading').style.display = 'none';
@@ -209,3 +225,4 @@
 
 </body>
 </html>
+
